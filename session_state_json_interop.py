@@ -1,9 +1,13 @@
 import json
 from pathlib import Path
-import streamlit as st
 
+import streamlit as st
+from st_files_connection import FilesConnection
 
 filepath = Path("history_proba.json")
+
+conn = st.connection('s3', type=FilesConnection)
+df = conn.read("lsz-streamlit-chat-proba-bucket-1/chat_proba_1/history_proba.json", input_format="json", ttl=600)
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -15,10 +19,19 @@ if "messages" not in st.session_state:
             st.session_state.messages.append(m)
 
 # st.write(st.session_state)
+st.write(st.secrets.PROBA)
+st.write(df)
 
 # TODO githubra felrakni és deployolni
+#TODO kiolvasás megy az s3-ról, de hogy tudok oda írni?
+# Talán ez segít:  https://discuss.streamlit.io/t/cannot-upload-streamlit-uploaded-file-to-s3-bucket/33376
+
+
+
+
 
 st.title("Json együttműködés")
+
 
 
 
